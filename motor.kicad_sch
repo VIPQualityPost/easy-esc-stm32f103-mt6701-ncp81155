@@ -1900,7 +1900,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 09c9f62b-fd14-427e-98b7-f6cb2327808a)
   )
-  (text "SIGNAL CONNECTORS" (at 17.78 127 0)
+  (text "MOTOR CONNECTORS" (at 17.78 127 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 437539a8-1e45-470f-b82a-3f164f29308d)
   )
