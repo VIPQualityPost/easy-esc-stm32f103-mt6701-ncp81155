@@ -9,7 +9,6 @@
 //Encoder mt6701 = Encoder(ENC_A, ENC_B, ENC_CPR, ENC_Z);
 BLDCDriver3PWM driver =  BLDCDriver3PWM(PWM_U, PWM_V, PWM_W, EN_U, EN_V, EN_W);
 BLDCMotor motor = BLDCMotor(POLEPAIRS);
-//HardwareSerial SerialUSB(UART1_RX,UART1_TX);
 
 // interrupt handlers
 void doA(){
@@ -24,10 +23,7 @@ void doZ(){
   //mt6701.handleIndex();
 }
 
-void setup() {
-
-  SystemClock_Config();
-  
+void setup(){
   //mt6701.init(); 
   //mt6701.enableInterrupts(doA,doB,doZ);
   //motor.linkSensor(&mt6701);
@@ -60,8 +56,8 @@ void setup() {
 
   motor.target = 2;
 
-  SerialUSB.begin(9600);
-  SerialUSB.println("Motor ready!");
+  Serial.begin(115200);
+  Serial.println("Motor ready!");
 }
 
 void loop() {
