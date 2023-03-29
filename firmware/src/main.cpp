@@ -6,11 +6,11 @@
 
 #define POLEPAIRS 7 
 
+float target = 0;
+
 Encoder mt6701 = Encoder(ENC_A, ENC_B, ENC_CPR, ENC_Z);
 BLDCDriver3PWM driver =  BLDCDriver3PWM(PWM_U, PWM_V, PWM_W, EN_U, EN_V, EN_W);
 BLDCMotor motor = BLDCMotor(POLEPAIRS);
-
-//Commander commander = Commander(Serial);
 
 // interrupt handlers
 void doA(){
@@ -24,11 +24,6 @@ void doB(){
 void doZ(){
   mt6701.handleIndex();
 }
-
-// Commander interface
-//void doMotor(char* cmd){
-  //commander.motor(&motor,cmd);
-//}
 
 void setup() {
   
@@ -48,11 +43,11 @@ void setup() {
   motor.PID_velocity.output_ramp = 1000;
   motor.LPF_velocity.Tf = 0.01;
 
-  //motor.P_angle.P = 20;
-  //motor.P_angle.I = 0;
-  //motor.P_angle.D = 0;
-  //motor.P_angle.output_ramp = 10000; //rad/s^2
-  //motor.LPF_angle.Tf = 0; //try to avoid
+  motor.P_angle.P = 20;
+  motor.P_angle.I = 0;
+  motor.P_angle.D = 0;
+  motor.P_angle.output_ramp = 10000; //rad/s^2
+  motor.LPF_angle.Tf = 0; //try to avoid
 
   motor.current_limit = 0.5;
   motor.velocity_limit = 40;
@@ -61,10 +56,8 @@ void setup() {
   motor.init();
   motor.initFOC();
 
-  SerialUSB.begin();
+  SerialUSB.begin(9600);
   SerialUSB.println("Motor ready!");
-
-  //commander.add('M', doMotor, "motor");
 
   delay(500);
 }
@@ -74,5 +67,4 @@ void loop() {
   motor.loopFOC();
   motor.move(2);
 
-  //commander.run();
 }
