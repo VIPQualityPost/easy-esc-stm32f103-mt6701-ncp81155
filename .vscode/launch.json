@@ -1,0 +1,47 @@
+// AUTOMATICALLY GENERATED FILE. PLEASE DO NOT MODIFY IT MANUALLY
+//
+// PIO Unified Debugger
+//
+// Documentation: https://docs.platformio.org/page/plus/debugging.html
+// Configuration: https://docs.platformio.org/page/projectconf/section_env_debug.html
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "platformio-debug",
+            "request": "launch",
+            "name": "PIO Debug",
+            "executable": "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/.pio/build/easyesc_stm32f1xx_MT6701_NCP81155/firmware.elf",
+            "projectEnvName": "easyesc_stm32f1xx_MT6701_NCP81155",
+            "toolchainBinDir": "/Users/mateijordache/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "internalConsoleOptions": "openOnSessionStart",
+            "svdPath": "/Users/mateijordache/.platformio/platforms/ststm32/misc/svd/STM32F103xx.svd",
+            "preLaunchTask": {
+                "type": "PlatformIO",
+                "task": "Pre-Debug"
+            }
+        },
+        {
+            "type": "platformio-debug",
+            "request": "launch",
+            "name": "PIO Debug (skip Pre-Debug)",
+            "executable": "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/.pio/build/easyesc_stm32f1xx_MT6701_NCP81155/firmware.elf",
+            "projectEnvName": "easyesc_stm32f1xx_MT6701_NCP81155",
+            "toolchainBinDir": "/Users/mateijordache/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "internalConsoleOptions": "openOnSessionStart",
+            "svdPath": "/Users/mateijordache/.platformio/platforms/ststm32/misc/svd/STM32F103xx.svd"
+        },
+        {
+            "type": "platformio-debug",
+            "request": "launch",
+            "name": "PIO Debug (without uploading)",
+            "executable": "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/.pio/build/easyesc_stm32f1xx_MT6701_NCP81155/firmware.elf",
+            "projectEnvName": "easyesc_stm32f1xx_MT6701_NCP81155",
+            "toolchainBinDir": "/Users/mateijordache/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "internalConsoleOptions": "openOnSessionStart",
+            "svdPath": "/Users/mateijordache/.platformio/platforms/ststm32/misc/svd/STM32F103xx.svd",
+            "loadMode": "manual"
+        }
+    ]
+}
