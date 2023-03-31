@@ -101,6 +101,7 @@
                 "SIMPLEFOC_STM32_DEBUG",
                 "PIO_FRAMEWORK_ARDUINO_ENABLE_CDC",
                 "USBCON",
+                "MOTOR_CW=1",
                 "STM32F1xx",
                 "ARDUINO=10808",
                 "ARDUINO_ARCH_STM32",

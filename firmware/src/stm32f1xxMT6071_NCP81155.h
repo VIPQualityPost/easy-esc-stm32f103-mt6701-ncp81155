@@ -10,10 +10,20 @@
 #define ENC_I2C_EN PB2
 
 // mosfet driver pins
-#define PWM_U PA8
-#define EN_U PB13
-#define PWM_V PA9
-#define EN_V PB14
+// allow for dir switch to match encoder on build flag MOTOR_CW
+
+#if MOTOR_CW
+    #define PWM_U PA8
+    #define EN_U PB13
+    #define PWM_V PA9
+    #define EN_V PB14
+#else
+    #define PWM_U PA9
+    #define EN_U PB14
+    #define PWM_V PA8
+    #define EN_V PB13  
+#endif
+
 #define PWM_W PA10
 #define EN_W PB15 
 
