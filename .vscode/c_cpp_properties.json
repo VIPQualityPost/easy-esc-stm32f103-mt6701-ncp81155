@@ -10,6 +10,7 @@
             "includePath": [
                 "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/firmware/include",
                 "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/firmware/src",
+                "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/firmware/lib/MT6701",
                 "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/.pio/libdeps/easyesc_stm32f1xx_MT6701_NCP81155/SimpleFOCDrivers/src",
                 "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/.pio/libdeps/easyesc_stm32f1xx_MT6701_NCP81155/Simple FOC/src",
                 "/Users/mateijordache/.platformio/packages/framework-arduinoststm32/libraries/SPI/src",
@@ -54,6 +55,7 @@
                 "path": [
                     "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/firmware/include",
                     "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/firmware/src",
+                    "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/firmware/lib/MT6701",
                     "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/.pio/libdeps/easyesc_stm32f1xx_MT6701_NCP81155/SimpleFOCDrivers/src",
                     "/Users/mateijordache/Documents/electronics_projects/easy-esc/stm32f103-ncp81155-encoded/.pio/libdeps/easyesc_stm32f1xx_MT6701_NCP81155/Simple FOC/src",
                     "/Users/mateijordache/.platformio/packages/framework-arduinoststm32/libraries/SPI/src",
@@ -101,7 +103,8 @@
                 "SIMPLEFOC_STM32_DEBUG",
                 "PIO_FRAMEWORK_ARDUINO_ENABLE_CDC",
                 "USBCON",
-                "MOTOR_CW=1",
+                "MOTOR_CW=0",
+                "MT6701_I2C",
                 "STM32F1xx",
                 "ARDUINO=10808",
                 "ARDUINO_ARCH_STM32",

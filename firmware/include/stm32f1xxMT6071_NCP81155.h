@@ -4,8 +4,8 @@
 #define ENC_A PC13
 #define ENC_B PC14
 #define ENC_Z PC15
+
 #define ENC_PUSH PB1
-#define ENC_CPR 4096
 #define ENC_MODE PB0
 #define ENC_I2C_EN PB2
 
