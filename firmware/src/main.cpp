@@ -2,14 +2,19 @@
 #include <SimpleFOC.h>
 #include <MT6701_I2C.h>
 #include "stm32f1xxMT6071_NCP81155.h"
+// #include <RTTStream.h>
 
-#define ENC_CPR 1024
-
+// Motor specific parameters
 #define POLEPAIRS 4
 #define Rphase 1.75
 #define MOTOR_KV 1000
 
+/**
+ * Magnetic sensor configuration schemes.
+ * Set using build flag -DMT6701_ABZ, -DMT6701_I2C, -DMT6701_SSI.
+*/
 #ifdef MT6701_ABZ
+#define ENC_CPR 1024
 Encoder mt6701 = Encoder(ENC_A, ENC_B, ENC_CPR, ENC_Z);
 
 // interrupt handlers
@@ -42,9 +47,18 @@ TwoWire enc_i2c(I2C2_SDA, I2C2_SCL);
 // SSI code
 #endif
 
+// Prepare SimpleFOC constructors.
 BLDCDriver3PWM driver =  BLDCDriver3PWM(PWM_U, PWM_V, PWM_W, EN_U, EN_V, EN_W);
 BLDCMotor motor = BLDCMotor(POLEPAIRS,Rphase,MOTOR_KV);
 // HardwareSerial stlinkSerial(UART1_RX,UART1_TX);
+// RTTStream rtt;
+
+#ifdef HAS_COMMANDER
+Commander commander = Commander(SerialUSB);
+void doMotor(char *cmd){
+  commander.motor(&motor,cmd);
+}
+#endif
 
 void mt6701_i2c_enable(bool state){
   digitalWrite(ENC_MODE,state);
@@ -53,8 +67,9 @@ void mt6701_i2c_enable(bool state){
 
 void setup(){
 
-  SerialUSB.begin(115200);
+  #ifdef SIMPLEFOC_STM32_DEBUG
   SimpleFOCDebug::enable(&SerialUSB);
+  #endif
 
   pinMode(ENC_MODE,OUTPUT);
   pinMode(ENC_I2C_EN,OUTPUT);
@@ -88,22 +103,22 @@ void setup(){
   driver.voltage_limit  = 5;
   driver.init();
   motor.linkDriver(&driver);
-  SerialUSB.println("Driver ready.");
 
   // closed loop parameters
-  motor.PID_velocity.P = 0.15;
-  motor.PID_velocity.I = 0;
-  motor.PID_velocity.D = 0.001;
+  motor.PID_velocity.P = 1;
+  motor.PID_velocity.I = 10;
+  motor.PID_velocity.D = 0.005;
   motor.PID_velocity.output_ramp = 1000;
-  motor.LPF_velocity.Tf = 0.01;
+  motor.LPF_velocity.Tf = 1;
 
-  motor.P_angle.P = 15;
-  motor.P_angle.I = 0.1;
-  motor.P_angle.D = 0;
-  motor.P_angle.output_ramp = 10000; //rad/s^2
+  motor.P_angle.P = 1;
+  motor.P_angle.I = 10;
+  // motor.P_angle.D = 0;
+  // motor.P_angle.output_ramp = 1000; //rad/s^2
   motor.LPF_angle.Tf = 0; //try to avoid
 
   // motor parameters
+  motor.voltage_sensor_align = 2;
   motor.current_limit = 0.5;
   motor.velocity_limit = 20;
   motor.controller = MotionControlType::angle;
@@ -111,8 +126,19 @@ void setup(){
 
   motor.init();
   motor.initFOC();
-  SerialUSB.println("Motor initalized.");
 
+  // Commander actions
+  #ifdef HAS_COMMANDER
+  SerialUSB.begin();
+  motor.useMonitoring(SerialUSB);
+  motor.monitor_start_char = 'M';
+  motor.monitor_end_char = 'M';
+  motor.monitor_downsample = 250;
+  commander.add('M',doMotor,"motor");
+  commander.verbose = VerboseMode::machine_readable;
+  #endif
+
+  // rtt.println("setup done!");
   motor.target = 2;
 
 }
@@ -121,5 +147,10 @@ void loop() {
 
   motor.loopFOC();
   motor.move();
+
+  #ifdef HAS_COMMANDER
+  motor.monitor();
+  commander.run();
+  #endif
 
 }

@@ -1,0 +1,23 @@
+{
+  "name": "ANSI",
+  "keywords": "VT100, Tera Term, putty, Terminal",
+  "description": "Arduino library to send ANSI escape sequences.",
+  "authors":
+  [
+    {
+      "name": "Rob Tillaart",
+      "email": "Rob.Tillaart@gmail.com",
+      "maintainer": true
+    }
+  ],
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/RobTillaart/ANSI.git"
+  },
+  "version": "0.2.0",
+  "license": "MIT",
+  "frameworks": "arduino",
+  "platforms": "*",
+  "headers": "ansi.h"
+}
