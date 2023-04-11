@@ -4,11 +4,6 @@
 #include "stm32f1xxMT6071_NCP81155.h"
 // #include <RTTStream.h>
 
-// Motor specific parameters
-#define POLEPAIRS 4
-#define Rphase 1.75
-#define MOTOR_KV 1000
-
 /**
  * Magnetic sensor configuration schemes.
  * Set using build flag -DMT6701_ABZ, -DMT6701_I2C, -DMT6701_SSI.
@@ -49,7 +44,7 @@ TwoWire enc_i2c(I2C2_SDA, I2C2_SCL);
 
 // Prepare SimpleFOC constructors.
 BLDCDriver3PWM driver =  BLDCDriver3PWM(PWM_U, PWM_V, PWM_W, EN_U, EN_V, EN_W);
-BLDCMotor motor = BLDCMotor(POLEPAIRS,Rphase,MOTOR_KV);
+BLDCMotor motor = BLDCMotor(POLEPAIRS,RPHASE,MOTOR_KV);
 // HardwareSerial stlinkSerial(UART1_RX,UART1_TX);
 // RTTStream rtt;
 
@@ -105,24 +100,24 @@ void setup(){
   motor.linkDriver(&driver);
 
   // closed loop parameters
-  motor.PID_velocity.P = 1;
-  motor.PID_velocity.I = 10;
+  motor.PID_velocity.P = .1;
+  motor.PID_velocity.I = 0;
   motor.PID_velocity.D = 0.005;
   motor.PID_velocity.output_ramp = 1000;
   motor.LPF_velocity.Tf = 1;
 
-  motor.P_angle.P = 1;
-  motor.P_angle.I = 10;
+  // motor.P_angle.P = 1;
+  // motor.P_angle.I = 10;
   // motor.P_angle.D = 0;
   // motor.P_angle.output_ramp = 1000; //rad/s^2
-  motor.LPF_angle.Tf = 0; //try to avoid
+  // motor.LPF_angle.Tf = 0; //try to avoid
 
   // motor parameters
   motor.voltage_sensor_align = 2;
   motor.current_limit = 0.5;
   motor.velocity_limit = 20;
-  motor.controller = MotionControlType::angle;
-  motor.foc_modulation = FOCModulationType::SinePWM;
+  motor.controller = MotionControlType::torque;
+  // motor.foc_modulation = FOCModulationType::SinePWM;
 
   motor.init();
   motor.initFOC();
@@ -133,20 +128,29 @@ void setup(){
   motor.useMonitoring(SerialUSB);
   motor.monitor_start_char = 'M';
   motor.monitor_end_char = 'M';
-  motor.monitor_downsample = 250;
+  motor.monitor_downsample = 300;
   commander.add('M',doMotor,"motor");
   commander.verbose = VerboseMode::machine_readable;
   #endif
 
-  // rtt.println("setup done!");
-  motor.target = 2;
-
+  motor.target = 0;
 }
+
+PIDController P_Haptic{.P=3, .I=.75, .D=0.005, .output_ramp=100000, .limit=12};
+float attract_angle = 0;
+float detent_distance = (360/DETENTS)*(_PI/180);
+
+float find_detent(float current_angle){
+  return round(current_angle/detent_distance) * detent_distance;
+};
 
 void loop() {
 
   motor.loopFOC();
-  motor.move();
+
+  motor.move(P_Haptic(attract_angle - motor.shaft_angle));
+
+  attract_angle = find_detent(motor.shaft_angle);
 
   #ifdef HAS_COMMANDER
   motor.monitor();
