@@ -114,7 +114,7 @@ void setup(){
 
   // motor parameters
   motor.voltage_sensor_align = 2;
-  motor.current_limit = 0.5;
+  motor.current_limit = 0.8;
   motor.velocity_limit = 20;
   motor.controller = MotionControlType::torque;
   // motor.foc_modulation = FOCModulationType::SinePWM;
@@ -136,7 +136,7 @@ void setup(){
   motor.target = 0;
 }
 
-PIDController P_Haptic{.P=3, .I=.75, .D=0.005, .output_ramp=100000, .limit=12};
+PIDController P_Haptic{.P=1, .I=0, .D=0.005, .output_ramp=1000, .limit=20};
 float attract_angle = 0;
 float detent_distance = (360/DETENTS)*(_PI/180);
 
