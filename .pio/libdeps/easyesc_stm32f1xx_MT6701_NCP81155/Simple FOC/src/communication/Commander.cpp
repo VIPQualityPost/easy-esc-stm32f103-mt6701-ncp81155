@@ -494,6 +494,7 @@ void Commander::scalar(float* value,  char* user_cmd){
   println(*value);
 }
 
+
 void Commander::target(FOCMotor* motor,  char* user_cmd, char* separator){
   // if no values sent
   if(isSentinel(user_cmd[0])) {
@@ -584,6 +585,7 @@ void Commander::target(FOCMotor* motor,  char* user_cmd, char* separator){
   println(motor->target);
 }
 
+
 bool Commander::isSentinel(char ch)
 {
   if(ch == eol)
@@ -636,6 +638,7 @@ void Commander::println(const char message){
   if(!com_port || verbose == VerboseMode::nothing ) return;
   com_port->println(message);
 }
+
 
 void Commander::printVerbose(const char* message){
   if(verbose == VerboseMode::user_friendly) print(message);
