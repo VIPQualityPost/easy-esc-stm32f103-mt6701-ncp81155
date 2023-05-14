@@ -106,7 +106,7 @@
                 "HAS_COMMANDER",
                 "MT6701_I2C",
                 "POLEPAIRS=6",
-                "RPHASE=4",
+                "RPHASE=1",
                 "MOTOR_KV=1000",
                 "DETENTS=8",
                 "STM32F1xx",

@@ -95,16 +95,16 @@ void setup(){
   // setup the driver
   driver.pwm_frequency = 25000;
   driver.voltage_power_supply = 5;
-  driver.voltage_limit  = 5;
+  driver.voltage_limit  = 3;
   driver.init();
   motor.linkDriver(&driver);
 
   // closed loop parameters
-  motor.PID_velocity.P = .1;
-  motor.PID_velocity.I = 0;
-  motor.PID_velocity.D = 0.005;
-  motor.PID_velocity.output_ramp = 1000;
-  motor.LPF_velocity.Tf = 1;
+  motor.PID_velocity.P = 0.5;
+  motor.PID_velocity.I = 0.1;
+  motor.PID_velocity.D = 0.002;
+  motor.PID_velocity.output_ramp = 100;
+  motor.LPF_velocity.Tf = 0.5;
 
   // motor.P_angle.P = 1;
   // motor.P_angle.I = 10;
@@ -115,8 +115,8 @@ void setup(){
   // motor parameters
   motor.voltage_sensor_align = 2;
   motor.current_limit = 0.8;
-  motor.velocity_limit = 200;
-  motor.controller = MotionControlType::torque;
+  motor.velocity_limit = 100;
+  motor.controller = MotionControlType::velocity;
   // motor.foc_modulation = FOCModulationType::SinePWM;
 
   motor.init();
@@ -128,7 +128,7 @@ void setup(){
   motor.useMonitoring(SerialUSB);
   motor.monitor_start_char = 'M';
   motor.monitor_end_char = 'M';
-  motor.monitor_downsample = 300;
+  motor.monitor_downsample = 500;
   commander.add('M',doMotor,"motor");
   commander.verbose = VerboseMode::machine_readable;
   #endif
