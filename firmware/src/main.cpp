@@ -69,8 +69,8 @@ void setup(){
   motor.linkDriver(&driver);
 
   // closed loop parameters
-  motor.PID_velocity.P = 0.5;
-  motor.PID_velocity.I = 0.1;
+  motor.PID_velocity.P = 0.2;
+  motor.PID_velocity.I = 0.2;
   motor.PID_velocity.D = 0.002;
   motor.PID_velocity.output_ramp = 100;
   motor.LPF_velocity.Tf = 0.5;
@@ -85,7 +85,7 @@ void setup(){
   motor.voltage_sensor_align = 2;
   motor.current_limit = 0.5;
   motor.velocity_limit = 20;
-  motor.controller = MotionControlType::velocity;
+  motor.controller = MotionControlType::angle;
   motor.foc_modulation = FOCModulationType::SinePWM;
 
   motor.init();
