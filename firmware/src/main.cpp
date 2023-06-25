@@ -8,23 +8,7 @@
  * Magnetic sensor configuration schemes.
  * Set using build flag -DMT6701_ABZ, -DMT6701_I2C, -DMT6701_SSI.
 */
-#ifdef MT6701_ABZ
-#define ENC_CPR 1024
-Encoder mt6701 = Encoder(ENC_A, ENC_B, ENC_CPR, ENC_Z);
 
-// interrupt handlers
-void doA(){
-  mt6701.handleA();
-}
-
-void doB(){
-  mt6701.handleB();
-}
-
-void doZ(){
-  mt6701.handleIndex();
-}
-#endif
 
 #ifdef MT6701_I2C
 MT6701_I2CConfig_s mt6701_config = {
@@ -36,10 +20,6 @@ MT6701_I2CConfig_s mt6701_config = {
 
 MT6701_Serial_I2C mt6701 = MT6701_Serial_I2C(mt6701_config);
 TwoWire enc_i2c(I2C2_SDA, I2C2_SCL);
-#endif
-
-#ifdef MT6701_SSI
-// SSI code
 #endif
 
 // Prepare SimpleFOC constructors.
@@ -66,30 +46,11 @@ void setup(){
   SimpleFOCDebug::enable(&SerialUSB);
   #endif
 
-  pinMode(ENC_MODE,OUTPUT);
-  pinMode(ENC_I2C_EN,OUTPUT);
-
-  #ifdef MT6701_ABZ
-  // set the MT6701 to ABZ mode
-  mt6701_i2c_enable(0);
-  delay(1000);
-  // Initialize after letting settle briefly (600ms?)
-  mt6701.quadrature = Quadrature::OFF;
-  mt6701.init(); 
-  mt6701.enableInterrupts(doA,doB,doZ);
-  motor.linkSensor(&mt6701);
-  #endif
-
   #ifdef MT6701_I2C
-  // set the MT6701 to serial mode
-  mt6701_i2c_enable(1);
+  mt6701_i2c_enable(GPIO_PIN_SET);
   delay(1000); //let chip settle
   mt6701.init(&enc_i2c);
   motor.linkSensor(&mt6701);
-  #endif
-
-  #ifdef MT6701_SSI
-  // SSI init code
   #endif
 
   // setup the driver
