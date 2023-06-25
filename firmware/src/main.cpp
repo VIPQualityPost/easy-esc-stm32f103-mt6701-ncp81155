@@ -4,10 +4,10 @@
 #include "stm32f1xxMT6071_NCP81155.h"
 // #include <RTTStream.h>
 
-/**
- * Magnetic sensor configuration schemes.
- * Set using build flag -DMT6701_ABZ, -DMT6701_I2C, -DMT6701_SSI.
-
+// Motor specific parameters
+#define POLEPAIRS 4
+#define Rphase 1.75
+#define MOTOR_KV 1000
 
 #ifdef MT6701_I2C
 MT6701_I2CConfig_s mt6701_config = {
@@ -28,9 +28,8 @@ BLDCMotor motor = BLDCMotor(POLEPAIRS,RPHASE,MOTOR_KV);
 
 #ifdef HAS_COMMANDER
 Commander commander = Commander(Serial);
-void doMotor(char *cmd)
-{
-  commander.motor(&motor, cmd);
+void doMotor(char *cmd){
+  commander.motor(&motor,cmd);
 }
 #endif
 
@@ -40,16 +39,19 @@ void mt6701_i2c_enable(bool state)
   digitalWrite(ENC_I2C_EN, state);
 }
 
-void setup()
-{
+void setup(){
 
-#ifdef SIMPLEFOC_STM32_DEBUG
+  #ifdef SIMPLEFOC_STM32_DEBUG
+  SimpleFOCDebug::enable(&Serial);
+  #endif
+
+  #ifdef SIMPLEFOC_STM32_DEBUG
   SimpleFOCDebug::enable();
-#endif
+  #endif
 
   pinMode(ENC_MODE, OUTPUT);
   pinMode(ENC_I2C_EN, OUTPUT);
-
+  
   #ifdef MT6701_I2C
 
   // set the MT6701 to serial mode
@@ -57,7 +59,7 @@ void setup()
   delay(1000); // let chip settle
   mt6701.init(&enc_i2c);
   motor.linkSensor(&mt6701);
-#endif
+  #endif
 
   // setup the driver
   driver.pwm_frequency = 25000;
@@ -100,7 +102,6 @@ void setup()
   commander.verbose = VerboseMode::machine_readable;
 #endif
 
-  // rtt.println("setup done!");
   motor.target = 2;
 }
 
@@ -112,7 +113,6 @@ void loop()
 
   #ifdef HAS_COMMANDER
   // motor.monitor();
-
   commander.run();
 #endif
 }
