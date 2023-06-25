@@ -101,7 +101,7 @@
                 ]
             },
             "defines": [
-                "PLATFORMIO=60106",
+                "PLATFORMIO=60107",
                 "STM32F103xB",
                 "STM32F1",
                 "PIO_FRAMEWORK_ARDUINO_ENABLE_CDC",
