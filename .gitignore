@@ -10,3 +10,8 @@ fp-info-cache
 *.gbrjob
 *.drl
 *.dxf
+
+.pio/
+c_cpp_properties.json
+launch.json
+
