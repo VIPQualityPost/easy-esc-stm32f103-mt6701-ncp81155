@@ -9,28 +9,6 @@
 #define Rphase 1.75
 #define MOTOR_KV 1000
 
-/**
- * Magnetic sensor configuration schemes.
- * Set using build flag -DMT6701_ABZ, -DMT6701_I2C, -DMT6701_SSI.
-*/
-#ifdef MT6701_ABZ
-#define ENC_CPR 1024
-Encoder mt6701 = Encoder(ENC_A, ENC_B, ENC_CPR, ENC_Z);
-
-// interrupt handlers
-void doA(){
-  mt6701.handleA();
-}
-
-void doB(){
-  mt6701.handleB();
-}
-
-void doZ(){
-  mt6701.handleIndex();
-}
-#endif
-
 #ifdef MT6701_I2C
 MT6701_I2CConfig_s mt6701_config = {
   .chip_address = 0b0000110, 
@@ -43,10 +21,6 @@ MT6701_Serial_I2C mt6701 = MT6701_Serial_I2C(mt6701_config);
 TwoWire enc_i2c(I2C2_SDA, I2C2_SCL);
 #endif
 
-#ifdef MT6701_SSI
-// SSI code
-#endif
-
 // Prepare SimpleFOC constructors.
 BLDCDriver3PWM driver =  BLDCDriver3PWM(PWM_U, PWM_V, PWM_W, EN_U, EN_V, EN_W);
 BLDCMotor motor = BLDCMotor(POLEPAIRS,Rphase,MOTOR_KV);
@@ -54,7 +28,7 @@ BLDCMotor motor = BLDCMotor(POLEPAIRS,Rphase,MOTOR_KV);
 // RTTStream rtt;
 
 #ifdef HAS_COMMANDER
-Commander commander = Commander(SerialUSB);
+Commander commander = Commander(Serial);
 void doMotor(char *cmd){
   commander.motor(&motor,cmd);
 }
@@ -68,22 +42,11 @@ void mt6701_i2c_enable(bool state){
 void setup(){
 
   #ifdef SIMPLEFOC_STM32_DEBUG
-  SimpleFOCDebug::enable(&SerialUSB);
+  SimpleFOCDebug::enable(&Serial);
   #endif
 
   pinMode(ENC_MODE,OUTPUT);
   pinMode(ENC_I2C_EN,OUTPUT);
-
-  #ifdef MT6701_ABZ
-  // set the MT6701 to ABZ mode
-  mt6701_i2c_enable(0);
-  delay(1000);
-  // Initialize after letting settle briefly (600ms?)
-  mt6701.quadrature = Quadrature::OFF;
-  mt6701.init(); 
-  mt6701.enableInterrupts(doA,doB,doZ);
-  motor.linkSensor(&mt6701);
-  #endif
 
   #ifdef MT6701_I2C
   // set the MT6701 to serial mode
@@ -91,10 +54,6 @@ void setup(){
   delay(1000); //let chip settle
   mt6701.init(&enc_i2c);
   motor.linkSensor(&mt6701);
-  #endif
-
-  #ifdef MT6701_SSI
-  // SSI init code
   #endif
 
   // setup the driver
@@ -130,7 +89,7 @@ void setup(){
   // Commander actions
   #ifdef HAS_COMMANDER
   SerialUSB.begin();
-  motor.useMonitoring(SerialUSB);
+  motor.useMonitoring(Serial);
   motor.monitor_start_char = 'M';
   motor.monitor_end_char = 'M';
   motor.monitor_downsample = 250;
@@ -149,7 +108,7 @@ void loop() {
   motor.move();
 
   #ifdef HAS_COMMANDER
-  motor.monitor();
+  // motor.monitor();
   commander.run();
   #endif
 
