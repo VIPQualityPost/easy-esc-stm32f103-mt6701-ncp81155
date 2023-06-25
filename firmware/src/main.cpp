@@ -56,7 +56,7 @@ BLDCMotor motor = BLDCMotor(POLEPAIRS, Rphase, MOTOR_KV);
 // RTTStream rtt;
 
 #ifdef HAS_COMMANDER
-Commander commander = Commander();
+Commander commander = Commander(Serial);
 void doMotor(char *cmd)
 {
   commander.motor(&motor, cmd);
@@ -126,7 +126,7 @@ void setup()
   motor.voltage_sensor_align = 2;
   motor.current_limit = 0.5;
   motor.velocity_limit = 20;
-  motor.controller = MotionControlType::angle;
+  motor.controller = MotionControlType::velocity;
   motor.foc_modulation = FOCModulationType::SinePWM;
 
   motor.init();
