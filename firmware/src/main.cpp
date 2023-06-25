@@ -4,11 +4,6 @@
 #include "stm32f1xxMT6071_NCP81155.h"
 // #include <RTTStream.h>
 
-// Motor specific parameters
-#define POLEPAIRS 4
-#define Rphase 1.75
-#define MOTOR_KV 1000
-
 /**
  * Magnetic sensor configuration schemes.
  * Set using build flag -DMT6701_ABZ, -DMT6701_I2C, -DMT6701_SSI.
@@ -50,8 +45,8 @@ TwoWire enc_i2c(I2C2_SDA, I2C2_SCL);
 #endif
 
 // Prepare SimpleFOC constructors.
-BLDCDriver3PWM driver = BLDCDriver3PWM(PWM_U, PWM_V, PWM_W, EN_U, EN_V, EN_W);
-BLDCMotor motor = BLDCMotor(POLEPAIRS, Rphase, MOTOR_KV);
+BLDCDriver3PWM driver =  BLDCDriver3PWM(PWM_U, PWM_V, PWM_W, EN_U, EN_V, EN_W);
+BLDCMotor motor = BLDCMotor(POLEPAIRS,RPHASE,MOTOR_KV);
 // HardwareSerial stlinkSerial(UART1_RX,UART1_TX);
 // RTTStream rtt;
 
@@ -105,19 +100,19 @@ void setup()
   // setup the driver
   driver.pwm_frequency = 25000;
   driver.voltage_power_supply = 5;
-  driver.voltage_limit = 5;
+  driver.voltage_limit  = 3;
   driver.init();
   motor.linkDriver(&driver);
 
   // closed loop parameters
-  motor.PID_velocity.P = 1;
-  motor.PID_velocity.I = 10;
-  motor.PID_velocity.D = 0.005;
-  motor.PID_velocity.output_ramp = 1000;
-  motor.LPF_velocity.Tf = 1;
+  motor.PID_velocity.P = 0.5;
+  motor.PID_velocity.I = 0.1;
+  motor.PID_velocity.D = 0.002;
+  motor.PID_velocity.output_ramp = 100;
+  motor.LPF_velocity.Tf = 0.5;
 
-  motor.P_angle.P = 1;
-  motor.P_angle.I = 10;
+  // motor.P_angle.P = 1;
+  // motor.P_angle.I = 10;
   // motor.P_angle.D = 0;
   // motor.P_angle.output_ramp = 1000; //rad/s^2
   motor.LPF_angle.Tf = 0; // try to avoid
@@ -138,8 +133,8 @@ void setup()
   motor.useMonitoring(Serial);
   motor.monitor_start_char = 'M';
   motor.monitor_end_char = 'M';
-  motor.monitor_downsample = 250;
-  commander.add('M', doMotor, "motor");
+  motor.monitor_downsample = 500;
+  commander.add('M',doMotor,"motor");
   commander.verbose = VerboseMode::machine_readable;
 #endif
 
