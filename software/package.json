@@ -1,0 +1,15 @@
+{
+  "name": "pump-program",
+  "version": "1.0.0",
+  "description": "peristaltic pump controller software",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "matei",
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "electron": "^25.2.0"
+  }
+}
