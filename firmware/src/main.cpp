@@ -70,7 +70,7 @@ void setup(){
 
   // closed loop parameters
   motor.PID_velocity.P = 0.2;
-  motor.PID_velocity.I = 0.2;
+  motor.PID_velocity.I = 3;
   motor.PID_velocity.D = 0.002;
   motor.PID_velocity.output_ramp = 100;
   motor.LPF_velocity.Tf = 0.5;
@@ -112,7 +112,7 @@ void loop()
   motor.move();
 
   #ifdef HAS_COMMANDER
-  // motor.monitor();
+  motor.monitor();
   commander.run();
 #endif
 }
