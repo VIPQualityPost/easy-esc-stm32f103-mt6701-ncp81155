@@ -563,6 +563,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/dom-serial@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/dom-serial/-/dom-serial-1.0.3.tgz#d4eae01b547a3f05f260fac194d79d0ccb365dd9"
+  integrity sha512-iuuXTHSUQfosDJTN3AxTHfYtDZVehzAc07P0d6Y6/D0mNMoAzSQcAB8cf3glzH8MfMpZx8JDQv9C+PBpILVI3g==
+
 "@types/eslint-scope@^3.7.3":
   version "3.7.4"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.4.tgz#37fc1223f0786c39627068a12e94d6e6fc61de16"
