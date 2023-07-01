@@ -1,8 +1,9 @@
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Home } from "./Home";
 
 function render() {
-  ReactDOM.render(<Home />, document.body);
+  const root = createRoot(document.getElementById("app"));
+  root.render(<Home />);
 }
 
 render();
