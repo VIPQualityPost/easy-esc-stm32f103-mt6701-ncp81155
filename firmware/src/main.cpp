@@ -21,7 +21,7 @@ TwoWire enc_i2c(I2C2_SDA, I2C2_SCL);
 // Prepare SimpleFOC constructors.
 BLDCDriver3PWM driver =  BLDCDriver3PWM(PWM_U, PWM_V, PWM_W, EN_U, EN_V, EN_W);
 BLDCMotor motor = BLDCMotor(POLEPAIRS,RPHASE,MOTOR_KV);
-Commander commander = Commander(Serial);
+Commander commander = Commander(SerialUSB);
 
 void doMotor(char *cmd){
   commander.motor(&motor,cmd);
@@ -34,18 +34,18 @@ void mt6701_i2c_enable(bool state)
 }
 
 void setup(){
-  Serial.begin();
+  SerialUSB.begin();
   commander.add('M',doMotor,"motor");
 
   #ifdef SIMPLEFOC_STM32_DEBUG
-  SimpleFOCDebug::enable(&Serial);
+  SimpleFOCDebug::enable(&SerialUSB);
   #endif
 
   pinMode(ENC_MODE, OUTPUT);
   pinMode(ENC_I2C_EN, OUTPUT);
   
   #ifdef MT6701_I2C
-  // set the MT6701 to serial mode
+  // set the MT6701 to SerialUSB mode
   mt6701_i2c_enable(1);
   delay(1000); // let chip settle
   mt6701.init(&enc_i2c);
@@ -78,7 +78,7 @@ void setup(){
 
   // Monitor initialization 
   #ifdef HAS_MONITOR
-  motor.useMonitoring(Serial);
+  motor.useMonitoring(SerialUSB);
   motor.monitor_start_char = 'M';
   motor.monitor_end_char = 'M';
   motor.monitor_downsample = 500;
