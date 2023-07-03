@@ -1,16 +1,4 @@
 .DS_Store
-fp-info-cache
-/gerbers
-/assembly
-*.kicad_pcb
-*.zip
-*.kicad_pcb
-*.kicad_pcb-bak
-*.gbr
-*.gbrjob
-*.drl
-*.dxf
-
 .pio/
 c_cpp_properties.json
 launch.json

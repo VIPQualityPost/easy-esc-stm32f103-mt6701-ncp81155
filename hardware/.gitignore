@@ -1,0 +1,6 @@
+assembly/
+gerbers/
+*backups/
+fp-info-cache
+*.kicad_pcb-bak
+.DS_Store
