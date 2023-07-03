@@ -76,7 +76,7 @@ void setup(){
   motor.init();
   motor.initFOC();
 
-// Commander actions
+  // Monitor initialization 
   #ifdef HAS_MONITOR
   motor.useMonitoring(Serial);
   motor.monitor_start_char = 'M';
