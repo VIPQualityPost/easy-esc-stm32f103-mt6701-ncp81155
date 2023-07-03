@@ -5,7 +5,7 @@
 
 // Motor specific parameters
 #define POLEPAIRS 4
-#define RPHASE 1.75
+#define RPHASE 0.7
 #define MOTOR_KV 1000
 
 #ifdef MT6701_I2C
@@ -21,7 +21,7 @@ TwoWire enc_i2c(I2C2_SDA, I2C2_SCL);
 // Prepare SimpleFOC constructors.
 BLDCDriver3PWM driver =  BLDCDriver3PWM(PWM_U, PWM_V, PWM_W, EN_U, EN_V, EN_W);
 BLDCMotor motor = BLDCMotor(POLEPAIRS,RPHASE,MOTOR_KV);
-Commander commander = Commander(SerialUSB);
+Commander commander = Commander(Serial);
 
 void doMotor(char *cmd){
   commander.motor(&motor,cmd);
@@ -34,18 +34,18 @@ void mt6701_i2c_enable(bool state)
 }
 
 void setup(){
-  SerialUSB.begin();
+  Serial.begin();
   commander.add('M',doMotor,"motor");
 
   #ifdef SIMPLEFOC_STM32_DEBUG
-  SimpleFOCDebug::enable(&SerialUSB);
+  SimpleFOCDebug::enable(&Serial);
   #endif
 
   pinMode(ENC_MODE, OUTPUT);
   pinMode(ENC_I2C_EN, OUTPUT);
   
   #ifdef MT6701_I2C
-  // set the MT6701 to SerialUSB mode
+  // set the MT6701 to Serial mode
   mt6701_i2c_enable(1);
   delay(1000); // let chip settle
   mt6701.init(&enc_i2c);
@@ -60,17 +60,17 @@ void setup(){
   motor.linkDriver(&driver);
 
   // closed loop parameters
-  motor.PID_velocity.P = 0.2;
-  motor.PID_velocity.I = 3;
-  motor.PID_velocity.D = 0.002;
-  motor.PID_velocity.output_ramp = 100;
-  motor.LPF_velocity.Tf = 0.5;
+  motor.PID_velocity.P = 0.3;
+  motor.PID_velocity.I = 20;
+  motor.PID_velocity.D = 0.003;
+  motor.PID_velocity.output_ramp = 50;
+  motor.LPF_velocity.Tf = 0.2;
   motor.LPF_angle.Tf = 0; // try to avoid
 
   // motor parameters
   motor.voltage_sensor_align = 2;
-  motor.current_limit = 0.5;
-  motor.velocity_limit = 20;
+  motor.current_limit = 0.8;
+  motor.velocity_limit = 50;
   motor.controller = MotionControlType::angle;
 
   motor.init();
@@ -78,10 +78,10 @@ void setup(){
 
   // Monitor initialization 
   #ifdef HAS_MONITOR
-  motor.useMonitoring(SerialUSB);
+  motor.useMonitoring(Serial);
   motor.monitor_start_char = 'M';
   motor.monitor_end_char = 'M';
-  motor.monitor_downsample = 500;
+  motor.monitor_downsample = 200;
   commander.verbose = VerboseMode::machine_readable;
   #endif
 
